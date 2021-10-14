@@ -6,57 +6,53 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
+    static final int INF = 987654321;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         int V = Integer.parseInt(st.nextToken());
         int E = Integer.parseInt(st.nextToken());
         int K = Integer.parseInt(br.readLine());
-        ArrayList<HashMap<Integer,Integer>> arr = new ArrayList<>();
+        ArrayList<ArrayList<Pair>> arr = new ArrayList<>();
         int[] ans = new int[V+1];
         for (int i = 0; i < V+1; i++) {
-            ans[i] = Integer.MAX_VALUE;
-        }
-        for (int i = 0; i < V+1; i++) {
-            arr.add(new HashMap<Integer,Integer>());
+            ans[i] = INF;
+            arr.add(new ArrayList<Pair>());
         }
         for (int i = 0; i < E; i++) {
             st = new StringTokenizer(br.readLine());
             int u = Integer.parseInt(st.nextToken());
             int v = Integer.parseInt(st.nextToken());
             int w = Integer.parseInt(st.nextToken());
-            HashMap hm = arr.get(u);
-            hm.put(v,Math.min((Integer)(hm.getOrDefault(v,Integer.MAX_VALUE)),w));
+            arr.get(u).add(new Pair(v,w));
         }
-        PriorityQueue<Pair> pq = new PriorityQueue<>(new Comparator<Pair>() {
-            @Override
-            public int compare(Pair o1, Pair o2) {
-                return o1.getX() - o2.getX();
-            }
-        });
+        PriorityQueue<Pair> pq = new PriorityQueue<>((o1, o2) -> o2.getY() - o1.getY());
         pq.add(new Pair(K,0));
         ans[K] = 0;
+        boolean[] chk = new boolean[V+1];
         while(!pq.isEmpty()){
             Pair p = pq.poll();
             int cur = p.getX();
-            int dist = -p.getY();
-            if(ans[cur]<dist)continue;
-            for (int key:
-            arr.get(cur).keySet()) {
-                int next = key;
-                int nextDist = dist + arr.get(cur).get(key);
+            if(chk[cur])continue;
+            chk[cur] = true;
+            for (Pair pair: arr.get(cur)) {
+                int next = pair.getX();
+                int nextDist = ans[cur]+ pair.getY();
                 if(nextDist<ans[next]){
                     ans[next] = nextDist;
-                    pq.offer(new Pair(next, -nextDist));
+                    pq.offer(new Pair(next, nextDist));
                 }
             }
-
-
         }
+        StringBuilder sb= new StringBuilder();
         for (int i = 1; i < V+1; i++) {
-            System.out.println(ans[i]==Integer.MAX_VALUE?"INF":ans[i]);
+            if(ans[i]==INF){
+                sb.append("INF").append('\n');
+            }else{
+                sb.append(ans[i]).append('\n');
+            }
         }
-
+        System.out.println(sb);
 
 
     }
@@ -73,15 +69,8 @@ class Pair{
         return x;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
     public int getY() {
         return y;
     }
 
-    public void setY(int y) {
-        this.y = y;
-    }
 }
