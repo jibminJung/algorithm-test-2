@@ -28,7 +28,14 @@ public class Main {
                     int to = from + range;
                     dp[from][to] =Integer.MAX_VALUE;
                     for (int mid = from; mid < to; mid++) {
+                        System.out.println(dp[from][to]);
                         dp[from][to]= Math.min(dp[from][to],dp[from][mid]+dp[mid+1][to]+sum[to]-sum[from-1]);
+                        System.out.print(dp[from][mid]+" ");
+                        System.out.print(dp[mid+1][to]+" ");
+                        System.out.println(sum[to]-sum[from-1]+" ");
+                        System.out.println(dp[from][to]);
+                        System.out.println("----");
+//                        dp[from][to]= Math.min(dp[from][to],dp[from][mid]+dp[mid+1][to]);
                     }
                 }
             }
