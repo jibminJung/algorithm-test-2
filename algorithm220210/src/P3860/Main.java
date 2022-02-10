@@ -9,7 +9,7 @@ import java.util.StringTokenizer;
 
 public class Main {
     static int w, h, g, e;
-    static int[][] map;
+    static long[][] map;
     static ArrayList<Edge> edges = new ArrayList<>();
     static int[] dx = {0, 1, 0, -1};
     static int[] dy = {1, 0, -1, 0};
@@ -25,7 +25,8 @@ public class Main {
             if (w == 0 && h == 0) {
                 break;
             }
-            map = new int[w][h];
+            edges = new ArrayList<>();
+            map = new long[w][h];
             g = Integer.parseInt(br.readLine());
             for (int i = 0; i < g; i++) {
                 st = new StringTokenizer(br.readLine());
@@ -42,9 +43,10 @@ public class Main {
                 int y2 = Integer.parseInt(st.nextToken());
                 int t = Integer.parseInt(st.nextToken());
                 edges.add(new Edge(new Point(x1, y1), new Point(x2, y2), t));
-                map[x1][y1] = -1;
+                map[x1][y1] = 1;
             }
-            map[w - 1][h - 1] = -1;
+            map[w-1][h-1]=1;
+            //make edge list
             for (int i = 0; i < w; i++) {
                 for (int j = 0; j < h; j++) {
                     if (map[i][j] == 0) {
@@ -52,7 +54,7 @@ public class Main {
                             int nx = i + dx[k];
                             int ny = j + dy[k];
                             if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue;
-                            if (map[nx][ny] == 0) {
+                            if (map[nx][ny] >= 0) {
                                 edges.add(new Edge(new Point(i, j), new Point(nx, ny), 1));
                             }
                         }
@@ -60,24 +62,25 @@ public class Main {
                 }
             }
             //bellman-ford
-            int[][] dist = new int[w][h];
+            long[][] dist = new long[w][h];
             for (int i = 0; i < w; i++) {
-                Arrays.fill(dist[i], Integer.MAX_VALUE);
+                Arrays.fill(dist[i], Long.MAX_VALUE);
             }
+            dist[0][0] = 0;
             for (int i = 0; i < w * h; i++) {
                 for (Edge edge : edges) {
-                    if (dist[edge.from.x][edge.from.y] != Integer.MAX_VALUE) {
+                    if (dist[edge.from.x][edge.from.y] != Long.MAX_VALUE) {
                         if (dist[edge.to.x][edge.to.y] > dist[edge.from.x][edge.from.y] + edge.cost) {
                             dist[edge.to.x][edge.to.y] = dist[edge.from.x][edge.from.y] + edge.cost;
                         }
                     }
                 }
             }
+            //cycle check
             boolean flag = false;
-
             for (Edge edge :
                     edges) {
-                if (dist[edge.from.x][edge.from.y] != Integer.MAX_VALUE) {
+                if (dist[edge.from.x][edge.from.y] != Long.MAX_VALUE) {
                     if (dist[edge.to.x][edge.to.y] > dist[edge.from.x][edge.from.y] + edge.cost) {
                         dist[edge.to.x][edge.to.y] = dist[edge.from.x][edge.from.y] + edge.cost;
                         flag = true;
@@ -85,13 +88,13 @@ public class Main {
                     }
                 }
             }
-
+            //result
             if (flag) {
-                sb.append("Never");
-            }else if(dist[w-1][h-1]==Integer.MAX_VALUE){
-                sb.append("Impossible");
+                sb.append("Never").append('\n');
+            }else if(dist[w-1][h-1]==Long.MAX_VALUE){
+                sb.append("Impossible").append('\n');
             }else{
-                sb.append(dist[w-1][h-1]);
+                sb.append(dist[w-1][h-1]).append('\n');
             }
         }
         System.out.println(sb);
