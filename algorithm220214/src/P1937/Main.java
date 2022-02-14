@@ -23,19 +23,13 @@ public class Main {
                 arr[i][j] = Integer.parseInt(st.nextToken());
             }
         }
+        int ans = 0;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                if(dp[i][j]==0){
-                    dfs(i,j);
-                }
+                ans = Math.max(ans,dfs(i,j));
             }
         }
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                System.out.print(dp[i][j]+"\t");
-            }
-            System.out.println();
-        }
+        System.out.println(ans);
 
 
     }
@@ -45,7 +39,7 @@ public class Main {
         if(dp[i][j]!=0){
             return dp[i][j];
         }
-        int rtn = 0;
+        int rtn = 1;
         for (int k = 0; k < 4; k++) {
             int nx = i + dx[k];
             int ny = j + dy[k];
@@ -53,7 +47,7 @@ public class Main {
                 continue;
             }
             if (arr[nx][ny] > arr[i][j]) {
-                rtn = Math.max(dfs(nx, ny),rtn)+1;
+                rtn = Math.max(dfs(nx, ny)+1,rtn);
             }
         }
         return dp[i][j] = rtn;
