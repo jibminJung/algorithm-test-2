@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
-public class P1086 {
+public class Main {
     static int N;
     static int K;
     static char[][] arr;
