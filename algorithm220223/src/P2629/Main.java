@@ -29,6 +29,9 @@ public class Main {
                     if(j-arr[i]>=0){
                         dp[j-arr[i]][i] = true;
                     }
+                    if(arr[i]-j>=0){
+                        dp[arr[i]-j][i] = true;
+                    }
                 }
             }
         }
