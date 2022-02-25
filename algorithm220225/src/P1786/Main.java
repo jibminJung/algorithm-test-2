@@ -41,17 +41,13 @@ public class Main {
 
     private static int[] makeLpsTable(char[] pattern) {
         int[] lps = new int[pattern.length];
-        int i = 0;
-        int j = 1;
-        while (i < pattern.length && j < pattern.length) {
-            if (pattern[i] == pattern[j]) {
-                lps[j] = lps[j - 1] + 1;
-                j++;
-                i++;
-            } else {
-                lps[j] = 0;
-                j++;
-                i = 0;
+        int j =0;
+        for (int i = 1; i < pattern.length; i++) {
+            while (j>0&&pattern[j]!=pattern[i]){
+                j=lps[j-1];
+            }
+            if(pattern[j]==pattern[i]){
+                lps[i] = ++j;
             }
         }
         return lps;
